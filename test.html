@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .red-flag {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+        }
+        .privacy {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+        .terms {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Terms & Conditions Test Page</h1>
+    <p>This page contains various types of links and content to test the extension.</p>
+
+    <div class="test-section">
+        <h2>🔗 Test Links</h2>
+        <p>
+            <a href="#terms">Terms of Service</a> | 
+            <a href="#privacy">Privacy Policy</a> | 
+            <a href="#conditions">Terms & Conditions</a> | 
+            <a href="https://example.com/terms">External Terms</a> |
+            <a href="https://example.com/privacy">External Privacy</a>
+        </p>
+    </div>
+
+    <div class="test-section red-flag">
+        <h2>🚨 Red Flag Content (Should be prioritized)</h2>
+        <p><strong>Arbitration Clause:</strong> By using this service, you agree to mandatory binding arbitration and waive your right to a jury trial or class action lawsuit. All disputes must be resolved through arbitration.</p>
+        
+        <p><strong>Automatic Renewal:</strong> Your subscription will automatically renew at the end of each billing period unless you cancel at least 30 days before the renewal date. You authorize us to charge your payment method for the renewal amount.</p>
+        
+        <p><strong>Hidden Fees:</strong> Additional charges may apply including processing fees, convenience fees, administrative fees, and maintenance fees. These fees are not included in the advertised price.</p>
+        
+        <p><strong>Limited Liability:</strong> We disclaim all warranties and limit our liability to the maximum extent permitted by law. We are not responsible for any damages, losses, or injuries.</p>
+        
+        <p><strong>Data Collection:</strong> We collect your personal data including name, email, address, phone number, and browsing history. We may share this data with third-party partners and affiliates for marketing purposes.</p>
+        
+        <p><strong>Data Sale:</strong> We reserve the right to sell your personal information to third parties for commercial purposes. You consent to the sale and transfer of your data.</p>
+        
+        <p><strong>Termination Rights:</strong> We may terminate your account at any time without notice. You have no right to appeal or challenge our decision.</p>
+    </div>
+
+    <div class="test-section privacy">
+        <h2>🔒 Privacy Content</h2>
+        <p>We collect personal information including your name, email address, and browsing history. This data is used to provide our services and may be shared with third-party partners.</p>
+        
+        <p>You have the right to opt-out of data collection and request deletion of your personal information. However, opting out may limit your access to certain features.</p>
+        
+        <p>We use cookies and tracking technologies to monitor your activity and provide personalized advertising. Your data may be used for behavioral targeting and profiling.</p>
+    </div>
+
+    <div class="test-section terms">
+        <h2>📋 General Terms Content</h2>
+        <p>By using this service, you agree to these terms and conditions. This agreement is governed by the laws of the jurisdiction specified in our legal notice.</p>
+        
+        <p>We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of any changes.</p>
+        
+        <p>This service is provided "as is" without any warranties. We are not liable for any damages arising from the use of this service.</p>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Debug Information</h2>
+        <p><strong>Current URL:</strong> <span id="current-url"></span></p>
+        <p><strong>Extension Status:</strong> <span id="extension-status">Checking...</span></p>
+        <p><strong>Content Length:</strong> <span id="content-length">-</span></p>
+    </div>
+
+    <script>
+        // Debug information
+        document.getElementById('current-url').textContent = window.location.href;
+        
+        // Check if extension is loaded
+        if (typeof chrome !== 'undefined' && chrome.runtime) {
+            document.getElementById('extension-status').textContent = 'Extension detected';
+        } else {
+            document.getElementById('extension-status').textContent = 'Extension not detected';
+        }
+        
+        // Monitor content length
+        const contentLength = document.body.textContent.length;
+        document.getElementById('content-length').textContent = contentLength + ' characters';
+        
+        console.log('Test page loaded. Content length:', contentLength);
+    </script>
+</body>
+</html> 

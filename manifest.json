@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Terms & Conditions Red-Flag Summariser",
+  "version": "1.0.0",
+  "description": "AI-powered tool to detect and analyze privacy risks in terms & conditions",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Terms & Conditions Red-Flag Summariser"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["content.css"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": ["config.js", "ai-service.js", "content-analyzer.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+} 

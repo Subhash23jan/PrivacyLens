@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms & Conditions Red-Flag Summariser</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="header-content">
+        <div class="header-icon">🔍</div>
+        <div class="header-text">
+          <h1>Terms & Conditions</h1>
+          <h2>Red-Flag Summariser</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="popup-content">
+      <!-- Welcome Screen -->
+      <div id="welcome-screen" class="screen active">
+        <div class="welcome-content">
+          <div class="welcome-icon">🛡️</div>
+          <h3>Protect Your Privacy!</h3>
+          <p>This extension helps you identify privacy risks and data theft concerns in terms & conditions.</p>
+
+          <button id="analyze-current" class="btn btn-primary">
+            🔍 Analyze Current Page
+          </button>
+          
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="feature-icon">🔍</span>
+              <span>Detects terms links automatically</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">🤖</span>
+              <span>AI-powered risk analysis</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">🚨</span>
+              <span>Highlights privacy concerns</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">⚡</span>
+              <span>Quick hover analysis</span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- Loading Screen -->
+      <div id="loading-screen" class="screen">
+        <div class="loading-content">
+          <div class="loading-icon">🤖</div>
+          <h3>Analyzing Page...</h3>
+          <div class="loading-spinner"></div>
+          <p>AI is scanning for privacy risks and data theft concerns</p>
+          <div id="loading-url" class="loading-url"></div>
+        </div>
+      </div>
+
+      <!-- Results Screen -->
+      <div id="results-screen" class="screen">
+        <div class="results-content">
+          <!-- Risk Score -->
+          <div class="risk-score-section">
+            <div id="risk-score" class="risk-score">
+              <div class="risk-number">--</div>
+              <div class="risk-label">Risk Level</div>
+            </div>
+          </div>
+
+          <!-- Red Flags -->
+          <div class="flags-section">
+            <div id="high-flags" class="flags-container high">
+              <h4>🚨 High Risk Issues</h4>
+              <div class="flags-list"></div>
+            </div>
+            
+            <div id="medium-flags" class="flags-container medium">
+              <h4>⚠️ Medium Concerns</h4>
+              <div class="flags-list"></div>
+            </div>
+            
+            <div id="low-flags" class="flags-container low">
+              <h4>ℹ️ Minor Notes</h4>
+              <div class="flags-list"></div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="actions-section">
+            <button id="view-full" class="btn btn-primary">
+              📄 View Full Terms
+            </button>
+            <button id="analyze-again" class="btn btn-secondary">
+              🔄 Analyze Again
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Screen -->
+      <div id="error-screen" class="screen">
+        <div class="error-content">
+          <div class="error-icon">❌</div>
+          <h3>Analysis Failed</h3>
+          <p id="error-message">Could not analyze the current page.</p>
+          <div class="error-tips">
+            <p>💡 Try refreshing the page and try again</p>
+            <p>💡 Make sure the page is fully loaded</p>
+            <p>💡 Check your internet connection</p>
+          </div>
+          <button id="retry-analysis" class="btn btn-primary">
+            🔄 Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="popup-footer">
+      <div class="footer-content">
+        <span class="footer-text">🔒 Privacy Protection Tool</span>
+        <span class="footer-version">v1.0</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 
