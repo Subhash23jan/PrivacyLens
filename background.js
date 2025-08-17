@@ -1,15 +1,35 @@
 // Background Script - Handles analysis requests and AI processing
 
 // Import modules
-importScripts('config.js', 'ai-service.js', 'content-analyzer.js');
+importScripts('env-loader.js', 'config.js', 'ai-service.js', 'content-analyzer.js');
 
 // Initialize services
-const contentAnalyzer = new ContentAnalyzer();
+let contentAnalyzer = null;
+
+// Initialize the content analyzer with environment variables
+async function initializeServices() {
+  try {
+    console.log('Background: Initializing services...');
+    contentAnalyzer = new ContentAnalyzer();
+    await contentAnalyzer.aiService.initialize();
+    console.log('Background: Services initialized successfully');
+  } catch (error) {
+    console.error('Background: Failed to initialize services:', error);
+  }
+}
+
+// Initialize services when background script loads
+initializeServices();
 
 // Global AI analysis function
 async function globalAnalyzeContent(content, url, context = 'page') {
   try {
     console.log(`Background: Global analysis for ${context}:`, url);
+    
+    // Ensure services are initialized
+    if (!contentAnalyzer) {
+      await initializeServices();
+    }
     
     // Use the same AI service for all analysis
     const analysis = await contentAnalyzer.aiService.analyzeContent(content, url);
@@ -82,6 +102,11 @@ async function handlePageAnalysis(url, sendResponse) {
     }
     
     console.log('Background: URL is valid, starting analysis...');
+    
+    // Ensure services are initialized
+    if (!contentAnalyzer) {
+      await initializeServices();
+    }
     
     // Analyze page content
     const analysis = await contentAnalyzer.analyzePage(url);

@@ -1,13 +1,25 @@
 // Terms & Conditions Red-Flag Summariser - Configuration
 
+// Load environment variables
+const envLoader = new EnvLoader();
+let envConfig = {};
+
+// Initialize environment variables
+envLoader.initialize().then(config => {
+  envConfig = config;
+}).catch(error => {
+  console.warn('Failed to load environment variables:', error);
+  envConfig = {};
+});
+
 const CONFIG = {
   // API Settings
   API: {
-    GEMINI_KEY: 'AIzaSyCkaN0eD-j4s5aU9aqU1iPIPW3A9YxF6Y4',
-    GEMINI_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
-    MAX_CONTENT_LENGTH: 800, // Much smaller for red flag focused content
-    MAX_RESPONSE_TOKENS: 600, // Reduced for concise responses
-    TIMEOUT_MS: 8000
+    GEMINI_KEY: envConfig.GEMINI_API_KEY || 'YOUR_API_KEY_HERE',
+    GEMINI_URL: envConfig.GEMINI_URL || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
+    MAX_CONTENT_LENGTH: envConfig.MAX_CONTENT_LENGTH || 800, // Much smaller for red flag focused content
+    MAX_RESPONSE_TOKENS: envConfig.MAX_RESPONSE_TOKENS || 600, // Reduced for concise responses
+    TIMEOUT_MS: envConfig.TIMEOUT_MS || 8000
   },
 
   // UI Settings

@@ -2,13 +2,36 @@
 
 class AIService {
   constructor() {
-    this.apiKey = CONFIG.API.GEMINI_KEY;
-    this.apiUrl = CONFIG.API.GEMINI_URL;
+    this.apiKey = null;
+    this.apiUrl = null;
+    this.initialized = false;
+  }
+
+  // Initialize the service with environment variables
+  async initialize() {
+    if (this.initialized) return;
+    
+    // Wait for environment variables to be loaded
+    const envLoader = new EnvLoader();
+    const envConfig = await envLoader.initialize();
+    
+    this.apiKey = envConfig.GEMINI_API_KEY || CONFIG.API.GEMINI_KEY;
+    this.apiUrl = envConfig.GEMINI_URL || CONFIG.API.GEMINI_URL;
+    
+    if (!this.apiKey || this.apiKey === 'YOUR_API_KEY_HERE') {
+      throw new Error('Gemini API key not configured. Please set up your API key in the extension settings.');
+    }
+    
+    this.initialized = true;
+    console.log('AI Service: Initialized with API key');
   }
 
   // Analyze content for privacy and data theft risks
   async analyzeContent(content, url) {
     try {
+      // Ensure service is initialized
+      await this.initialize();
+      
       console.log('AI Service: Starting analysis for', url);
       
       const prompt = this.createAnalysisPrompt(content);

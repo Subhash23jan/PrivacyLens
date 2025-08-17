@@ -13,13 +13,27 @@
 
 ## Installation
 
+### Prerequisites
+
+Before installing the extension, you need to:
+
+1. **Get a Gemini API Key**:
+   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Sign in and create a new API key
+   - Copy the key (starts with `AIza...`)
+
+2. **Configure Environment Variables**:
+   - See [ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md) for detailed instructions
+   - The extension uses Chrome storage to securely store your API key
+
 ### Method 1: Load Unpacked Extension
 
 1. **Download the extension files** to your computer
 2. **Open Chrome** and go to `chrome://extensions/`
 3. **Enable "Developer mode"** (toggle in top right)
 4. **Click "Load unpacked"** and select the extension folder
-5. **Pin the extension** to your toolbar for easy access
+5. **Configure your API key** (see Environment Setup guide)
+6. **Pin the extension** to your toolbar for easy access
 
 ### Method 2: Chrome Web Store (Coming Soon)
 

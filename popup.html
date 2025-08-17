@@ -128,7 +128,30 @@
     <div class="popup-footer">
       <div class="footer-content">
         <span class="footer-text">🔒 Privacy Protection Tool</span>
+        <button id="settings-btn" class="settings-btn" title="Settings">⚙️</button>
         <span class="footer-version">v1.0</span>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>⚙️ Settings</h3>
+          <button id="close-settings" class="close-btn">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-group">
+            <label for="api-key">Gemini API Key:</label>
+            <input type="password" id="api-key" placeholder="Enter your Gemini API key">
+            <small>Get your API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></small>
+          </div>
+          <div class="setting-actions">
+            <button id="save-settings" class="btn btn-primary">💾 Save Settings</button>
+            <button id="test-api-key" class="btn btn-secondary">🧪 Test API Key</button>
+          </div>
+          <div id="settings-status" class="settings-status"></div>
+        </div>
       </div>
     </div>
   </div>

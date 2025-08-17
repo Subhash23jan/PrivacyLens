@@ -3,6 +3,14 @@
 class ContentAnalyzer {
   constructor() {
     this.aiService = new AIService();
+    this.initialized = false;
+  }
+
+  // Initialize the analyzer
+  async initialize() {
+    if (this.initialized) return;
+    await this.aiService.initialize();
+    this.initialized = true;
   }
 
   // Extract and filter content from page
@@ -213,6 +221,9 @@ class ContentAnalyzer {
   async analyzePage(url) {
     try {
       console.log('Content Analyzer: Starting page analysis for', url);
+      
+      // Ensure analyzer is initialized
+      await this.initialize();
       
       // Fetch page content
       console.log('Content Analyzer: Fetching URL...');

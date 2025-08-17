@@ -29,7 +29,7 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["config.js", "ai-service.js", "content-analyzer.js"],
+      "resources": ["config.js", "ai-service.js", "content-analyzer.js", "env-loader.js"],
       "matches": ["<all_urls>"]
     }
   ]

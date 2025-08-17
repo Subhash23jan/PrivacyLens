@@ -1,13 +1,25 @@
 // Terms & Conditions Red-Flag Summariser - Constants
 
+// Load environment variables
+const envLoader = new EnvLoader();
+let envConfig = {};
+
+// Initialize environment variables
+envLoader.initialize().then(config => {
+  envConfig = config;
+}).catch(error => {
+  console.warn('Failed to load environment variables:', error);
+  envConfig = {};
+});
+
 // API Configuration
 export const API_CONFIG = {
-GEMINI_API_KEY: 'AIzaSyCkaN0eD-j4s5aU9aqU1iPIPW3A9YxF6Y4',
-  GEMINI_MODEL: 'gemini-1.5-flash',
-  GEMINI_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
-  MAX_CONTENT_LENGTH: 3000, // Reduced for token optimization
-  MAX_RESPONSE_TOKENS: 1024, // Reduced for concise responses
-  TIMEOUT_MS: 10000
+  GEMINI_API_KEY: envConfig.GEMINI_API_KEY || 'YOUR_API_KEY_HERE',
+  GEMINI_MODEL: envConfig.GEMINI_MODEL || 'gemini-1.5-flash',
+  GEMINI_URL: envConfig.GEMINI_URL || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
+  MAX_CONTENT_LENGTH: envConfig.MAX_CONTENT_LENGTH || 3000, // Reduced for token optimization
+  MAX_RESPONSE_TOKENS: envConfig.MAX_RESPONSE_TOKENS || 1024, // Reduced for concise responses
+  TIMEOUT_MS: envConfig.TIMEOUT_MS || 10000
 };
 
 // Terms Detection Keywords
