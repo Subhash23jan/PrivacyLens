@@ -59,7 +59,6 @@ A powerful Chrome extension that uses AI to analyze terms and conditions, detect
 2. **Click the settings gear** (⚙️) in the bottom right
 3. **Enter your Gemini API key** in the input field
 4. **Click "Save Settings"**
-5. **Test the API key** to ensure it works
 
 ## 🎯 How to Use
 
