@@ -49,6 +49,10 @@
               <span class="feature-icon">⚡</span>
               <span>Quick hover analysis</span>
             </div>
+            <div class="feature-item">
+              <span class="feature-icon">❓</span>
+              <span>Ask specific questions about privacy</span>
+            </div>
           </div>
           
         </div>
@@ -96,11 +100,54 @@
 
           <!-- Actions -->
           <div class="actions-section">
-            <button id="view-full" class="btn btn-primary">
+            <button id="ask-questions" class="btn btn-primary">
+              ❓ Ask Questions
+            </button>
+            <button id="view-full" class="btn btn-secondary">
               📄 View Full Terms
             </button>
             <button id="analyze-again" class="btn btn-secondary">
               🔄 Analyze Again
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Questions Screen -->
+      <div id="questions-screen" class="screen">
+        <div class="questions-content">
+          <div class="questions-header">
+            <h3>❓ Ask Questions About Terms</h3>
+            <p>Ask specific questions about privacy, data handling, or any concerns you have.</p>
+          </div>
+          
+          <div class="question-examples">
+            <h4>💡 Example Questions:</h4>
+            <div class="example-questions">
+              <div class="example-question">"How do they handle my image data?"</div>
+              <div class="example-question">"Can they sell my personal information?"</div>
+              <div class="example-question">"What happens if there's a data breach?"</div>
+              <div class="example-question">"Can I delete my data?"</div>
+            </div>
+          </div>
+          
+          <div class="question-input-section">
+            <textarea id="question-input" placeholder="Type your question here..." rows="3"></textarea>
+            <button id="ask-question-btn" class="btn btn-primary">
+              🤖 Ask AI
+            </button>
+          </div>
+          
+          <div id="question-response" class="question-response">
+            <!-- AI response will appear here -->
+          </div>
+          
+          <div class="questions-actions">
+            <button id="back-to-results" class="btn btn-secondary">
+              ← Back to Results
+            </button>
+            <button id="new-question" class="btn btn-primary">
+              ❓ Ask Another Question
             </button>
           </div>
         </div>

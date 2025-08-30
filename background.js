@@ -70,6 +70,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     handleLinkAnalysis(request.url, sendResponse);
     return true; // Keep message channel open for async response
   }
+  
+  if (request.action === 'askQuestion') {
+    handleQuestionRequest(request.question, request.analysis, request.url, sendResponse);
+    return true; // Keep message channel open for async response
+  }
 });
 
 // Handle content analysis request (for filtered content)
@@ -199,4 +204,225 @@ chrome.runtime.onInstalled.addListener(() => {
 // Handle extension startup
 chrome.runtime.onStartup.addListener(() => {
   console.log('Terms & Conditions Red-Flag Summariser started');
-}); 
+});
+
+// Handle question requests
+async function handleQuestionRequest(question, analysis, url, sendResponse) {
+  try {
+    console.log('Background: Handling question request:', question);
+    
+    // Ensure services are initialized
+    if (!contentAnalyzer) {
+      await initializeServices();
+    }
+    
+    // Fetch full webpage content
+    console.log('Background: Fetching full webpage content for question');
+    const fullContent = await fetchWebpageContent(url);
+    
+    // Filter content based on question keywords
+    const filteredContent = filterContentForQuestion(fullContent, question);
+    
+    // Create enhanced context with full content
+    const context = createQuestionContext(analysis, url, filteredContent);
+    
+    // Generate answer using AI with full content
+    const answer = await contentAnalyzer.aiService.answerQuestion(question, context);
+    
+    console.log('Background: Question answered successfully with full content');
+    sendResponse({ success: true, answer: answer });
+    
+  } catch (error) {
+    console.error('Background: Question handling failed', error);
+    sendResponse({ 
+      success: false, 
+      error: 'Failed to answer question: ' + error.message 
+    });
+  }
+}
+
+// Fetch full webpage content
+async function fetchWebpageContent(url) {
+  try {
+    console.log('Background: Fetching webpage content from:', url);
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    const html = await response.text();
+    console.log('Background: Webpage content fetched, length:', html.length);
+    
+    return html;
+    
+  } catch (error) {
+    console.error('Background: Failed to fetch webpage content:', error);
+    throw new Error(`Failed to fetch webpage content: ${error.message}`);
+  }
+}
+
+// Filter content based on question keywords
+function filterContentForQuestion(fullContent, question) {
+  try {
+    console.log('Background: Filtering content for question:', question);
+    
+    // Extract text content from HTML
+    let textContent = fullContent.replace(/<[^>]*>/g, ' ');
+    textContent = textContent.replace(/\s+/g, ' ').trim();
+    
+    // Extract question keywords
+    const questionKeywords = extractQuestionKeywords(question);
+    console.log('Background: Question keywords:', questionKeywords);
+    
+    // Split content into sentences and paragraphs
+    const sentences = textContent.split(/[.!?]\s+/).filter(s => s.trim().length > 15);
+    const paragraphs = textContent.split(/\n\s*\n/).filter(p => p.trim().length > 30);
+    
+    // Score content relevance
+    const scoredContent = [];
+    
+    // Score sentences
+    sentences.forEach(sentence => {
+      const sentenceLower = sentence.toLowerCase();
+      let score = 0;
+      
+      questionKeywords.forEach(keyword => {
+        if (sentenceLower.includes(keyword.toLowerCase())) {
+          score += 2; // Higher weight for exact matches
+        }
+        // Also check for related terms
+        if (sentenceLower.includes(keyword.toLowerCase().replace(' ', ''))) {
+          score += 1;
+        }
+      });
+      
+      if (score > 0) {
+        scoredContent.push({ text: sentence, score: score, type: 'sentence' });
+      }
+    });
+    
+    // Score paragraphs
+    paragraphs.forEach(paragraph => {
+      const paragraphLower = paragraph.toLowerCase();
+      let score = 0;
+      
+      questionKeywords.forEach(keyword => {
+        if (paragraphLower.includes(keyword.toLowerCase())) {
+          score += 1;
+        }
+      });
+      
+      if (score > 0) {
+        scoredContent.push({ text: paragraph, score: score, type: 'paragraph' });
+      }
+    });
+    
+    // Sort by relevance score and take top content
+    scoredContent.sort((a, b) => b.score - a.score);
+    
+    // Take top 8 most relevant pieces (mix of sentences and paragraphs)
+    const topContent = scoredContent.slice(0, 8);
+    
+    // Format content with clear separators
+    const filteredContent = topContent.map(item => {
+      return `[${item.type.toUpperCase()}] ${item.text}`;
+    }).join('\n\n');
+    
+    console.log('Background: Filtered content length:', filteredContent.length);
+    console.log('Background: Found', topContent.length, 'relevant content pieces');
+    
+    return filteredContent;
+    
+  } catch (error) {
+    console.error('Background: Failed to filter content:', error);
+    return fullContent.substring(0, 2000); // Fallback to first 2000 chars
+  }
+}
+
+// Extract keywords from question
+function extractQuestionKeywords(question) {
+  const questionLower = question.toLowerCase();
+  
+  // Define keyword categories with more specific terms
+  const keywordCategories = {
+    data: ['data', 'information', 'personal', 'privacy', 'user', 'customer', 'details'],
+    images: ['image', 'photo', 'picture', 'media', 'file', 'upload', 'visual'],
+    sharing: ['share', 'sell', 'transfer', 'disclose', 'third party', 'partner', 'distribute'],
+    security: ['security', 'breach', 'hack', 'protect', 'encrypt', 'safe', 'secure'],
+    deletion: ['delete', 'remove', 'erase', 'forget', 'right to be forgotten', 'eliminate'],
+    collection: ['collect', 'gather', 'store', 'retain', 'keep', 'obtain', 'acquire'],
+    usage: ['use', 'utilize', 'process', 'analyze', 'purpose', 'handle', 'manage'],
+    rights: ['rights', 'control', 'access', 'modify', 'portability', 'ownership'],
+    consent: ['consent', 'agree', 'permission', 'opt', 'choice', 'authorize'],
+    liability: ['liability', 'responsible', 'damage', 'compensation', 'claim', 'fault'],
+    time: ['time', 'duration', 'period', 'days', 'months', 'years', 'retention'],
+    location: ['location', 'geographic', 'country', 'region', 'jurisdiction'],
+    children: ['child', 'children', 'minor', 'underage', 'youth', 'teen'],
+    payment: ['payment', 'billing', 'charge', 'fee', 'cost', 'price', 'subscription']
+  };
+  
+  // Find relevant keywords from the question
+  const relevantKeywords = [];
+  
+  // Extract action words from the question
+  const actionWords = ['how', 'what', 'when', 'where', 'why', 'can', 'will', 'do', 'does', 'handle', 'manage', 'process'];
+  actionWords.forEach(word => {
+    if (questionLower.includes(word)) {
+      relevantKeywords.push(word);
+    }
+  });
+  
+  // Extract category keywords
+  Object.entries(keywordCategories).forEach(([category, keywords]) => {
+    keywords.forEach(keyword => {
+      if (questionLower.includes(keyword)) {
+        relevantKeywords.push(keyword);
+        // Add 2-3 most related keywords from the same category
+        const relatedKeywords = keywords.filter(k => k !== keyword).slice(0, 3);
+        relatedKeywords.forEach(relatedKeyword => {
+          if (!relevantKeywords.includes(relatedKeyword)) {
+            relevantKeywords.push(relatedKeyword);
+          }
+        });
+      }
+    });
+  });
+  
+  // Add common terms and conditions keywords
+  const commonTerms = ['terms', 'conditions', 'policy', 'agreement', 'service', 'website', 'platform'];
+  commonTerms.forEach(term => {
+    if (questionLower.includes(term)) {
+      relevantKeywords.push(term);
+    }
+  });
+  
+  // Remove duplicates and return
+  return [...new Set(relevantKeywords)];
+}
+
+// Create enhanced context for question answering
+function createQuestionContext(analysis, url, filteredContent) {
+  const context = {
+    url: url,
+    riskScore: analysis.riskScore,
+    redFlags: analysis.redFlags,
+    fullContent: filteredContent,
+    summary: `This website has a privacy risk score of ${analysis.riskScore}/100. `,
+    highRisks: analysis.redFlags.HIGH.map(flag => `${flag.flag}: ${flag.context}`).join('. '),
+    mediumRisks: analysis.redFlags.MEDIUM.map(flag => `${flag.flag}: ${flag.context}`).join('. '),
+    lowRisks: analysis.redFlags.LOW.map(flag => `${flag.flag}: ${flag.context}`).join('. ')
+  };
+  
+  context.summary += `High risk issues: ${context.highRisks}. `;
+  context.summary += `Medium concerns: ${context.mediumRisks}. `;
+  context.summary += `Minor notes: ${context.lowRisks}.`;
+  
+  return context;
+} 

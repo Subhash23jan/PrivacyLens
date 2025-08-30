@@ -31,10 +31,11 @@ const CONFIG = {
     ANIMATION_DURATION: 300
   },
 
-  // Risk Scoring
+  // Risk Scoring - Normalized for realistic assessment
   RISK: {
-    HIGH_THRESHOLD: 70,
-    MEDIUM_THRESHOLD: 30,
+    HIGH_THRESHOLD: 61,    // High risk starts at 61
+    MEDIUM_THRESHOLD: 41,  // Medium risk starts at 41
+    LOW_THRESHOLD: 21,     // Low risk starts at 21
     HIGH_WEIGHT: 3,
     MEDIUM_WEIGHT: 2,
     LOW_WEIGHT: 1

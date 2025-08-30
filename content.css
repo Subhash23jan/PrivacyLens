@@ -189,6 +189,11 @@
   background: linear-gradient(135deg, #f0fff4 0%, #e6ffe6 100%);
 }
 
+.tc-risk-level.very-low {
+  border-color: #95a5a6;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ecf0f1 100%);
+}
+
 .tc-risk-number {
   font-size: 28px;
   font-weight: 700;
@@ -274,6 +279,14 @@
   justify-content: center;
   gap: 6px;
   min-height: 36px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.tc-btn:active {
+  transform: scale(0.98);
 }
 
 .tc-btn-primary {

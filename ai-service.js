@@ -64,7 +64,14 @@ Return JSON only:
 
 Focus on: data collection, sharing, security, privacy rights, surveillance, retention, consent, breaches, user rights.
 
-Rate: HIGH (70-100) = serious risks, MEDIUM (30-69) = concerning, LOW (0-29) = minor.
+IMPORTANT SCORING GUIDELINES:
+- 0-20: Very low risk (standard privacy practices)
+- 21-40: Low risk (minor concerns, common practices)
+- 41-60: Medium risk (some concerning practices)
+- 61-80: High risk (serious privacy issues)
+- 81-100: Very high risk (major red flags, avoid)
+
+Be conservative with scoring. Most websites should score 20-50. Only give 70+ for serious privacy violations.
 
 Use simple English. JSON only.`;
   }
@@ -116,14 +123,60 @@ Use simple English. JSON only.`;
 
     const analysis = JSON.parse(jsonMatch[0]);
     
+    // Normalize the risk score to be more realistic
+    let normalizedScore = analysis.riskScore || 50;
+    
+    // Apply normalization to make scores more conservative
+    if (normalizedScore > 80) {
+      normalizedScore = Math.min(normalizedScore, 85); // Cap very high scores
+    } else if (normalizedScore > 60) {
+      normalizedScore = Math.min(normalizedScore, 75); // Moderate high scores
+    } else if (normalizedScore < 20) {
+      normalizedScore = Math.max(normalizedScore, 10); // Ensure minimum visibility
+    }
+    
+    console.log('AI Service: Original score:', analysis.riskScore, 'Normalized score:', normalizedScore);
+    
     return {
       url: url,
-      riskScore: analysis.riskScore || 50,
+      riskScore: Math.round(normalizedScore),
       redFlags: {
         HIGH: analysis.redFlags?.HIGH || [],
         MEDIUM: analysis.redFlags?.MEDIUM || [],
         LOW: analysis.redFlags?.LOW || []
       }
     };
+  }
+
+  // Answer user questions about the terms and conditions
+  async answerQuestion(question, context) {
+    try {
+      console.log('AI Service: Answering question:', question);
+      
+      const prompt = this.createQuestionPrompt(question, context);
+      const response = await this.callGeminiAPI(prompt);
+      
+      console.log('AI Service: Question answered');
+      return response;
+      
+    } catch (error) {
+      console.error('AI Service: Question answering failed', error);
+      throw new Error(`Question answering failed: ${error.message}`);
+    }
+  }
+
+  // Create prompt for question answering
+  createQuestionPrompt(question, context) {
+    return `Provide Answer like a human in 2-3 sentences. Be specific and use exact details from the content. If terms mention something, quote the relevant part directly. If not mentioned, clearly say: "The terms do not specify...". The final answer should sound natural.
+
+WEBSITE ANALYSIS SUMMARY:
+${context.summary}
+
+FULL WEBSITE CONTENT (Filtered for relevance):
+${context.fullContent}
+
+USER QUESTION: ${question}
+
+ANSWER:`;
   }
 } 

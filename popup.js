@@ -98,6 +98,47 @@ class PopupManager {
       });
     }
 
+    // Ask questions button
+    const askQuestionsBtn = document.getElementById('ask-questions');
+    if (askQuestionsBtn) {
+      askQuestionsBtn.addEventListener('click', () => {
+        this.showQuestionsScreen();
+      });
+    }
+
+    // Ask question button
+    const askQuestionBtn = document.getElementById('ask-question-btn');
+    if (askQuestionBtn) {
+      askQuestionBtn.addEventListener('click', () => {
+        this.askQuestion();
+      });
+    }
+
+    // Back to results button
+    const backToResultsBtn = document.getElementById('back-to-results');
+    if (backToResultsBtn) {
+      backToResultsBtn.addEventListener('click', () => {
+        this.showScreen('results');
+      });
+    }
+
+    // New question button
+    const newQuestionBtn = document.getElementById('new-question');
+    if (newQuestionBtn) {
+      newQuestionBtn.addEventListener('click', () => {
+        this.clearQuestionInput();
+      });
+    }
+
+    // Example question clicks
+    const exampleQuestions = document.querySelectorAll('.example-question');
+    exampleQuestions.forEach(question => {
+      question.addEventListener('click', () => {
+        const questionText = question.textContent;
+        this.setQuestionInput(questionText);
+      });
+    });
+
     // Close modal when clicking outside
     const modal = document.getElementById('settings-modal');
     if (modal) {
@@ -254,11 +295,12 @@ class PopupManager {
     }
   }
 
-  // Get risk level from score
+  // Get risk level from score - Updated for normalized scoring
   getRiskLevel(score) {
-    if (score >= 70) return 'HIGH';
-    if (score >= 30) return 'MEDIUM';
-    return 'LOW';
+    if (score >= 61) return 'HIGH';
+    if (score >= 41) return 'MEDIUM';
+    if (score >= 21) return 'LOW';
+    return 'VERY LOW';
   }
 
   // View full terms
@@ -382,6 +424,112 @@ class PopupManager {
     if (statusElement) {
       statusElement.textContent = message;
       statusElement.className = `settings-status ${type}`;
+    }
+  }
+
+  // Questions functionality
+  showQuestionsScreen() {
+    console.log('Popup: Showing questions screen');
+    this.showScreen('questions');
+    this.clearQuestionResponse();
+  }
+
+  async askQuestion() {
+    const questionInput = document.getElementById('question-input');
+    const question = questionInput.value.trim();
+    
+    if (!question) {
+      this.showQuestionError('Please enter a question');
+      return;
+    }
+
+    if (!this.currentAnalysis) {
+      this.showQuestionError('No analysis data available. Please analyze the page first.');
+      return;
+    }
+
+    console.log('Popup: Asking question:', question);
+    
+    // Show loading state
+    this.showQuestionLoading();
+    
+    try {
+      // Send question to background script
+      const response = await chrome.runtime.sendMessage({
+        action: 'askQuestion',
+        question: question,
+        analysis: this.currentAnalysis,
+        url: this.currentUrl
+      });
+
+      if (response && response.success) {
+        this.showQuestionResponse(response.answer);
+      } else {
+        this.showQuestionError(response ? response.error : 'Failed to get answer');
+      }
+      
+    } catch (error) {
+      console.error('Popup: Question failed', error);
+      this.showQuestionError('Failed to get answer. Please try again.');
+    }
+  }
+
+  showQuestionLoading() {
+    const responseElement = document.getElementById('question-response');
+    if (responseElement) {
+      responseElement.className = 'question-response loading';
+      responseElement.innerHTML = '';
+    }
+  }
+
+  showQuestionResponse(answer) {
+    const responseElement = document.getElementById('question-response');
+    if (responseElement) {
+      responseElement.className = 'question-response success';
+      responseElement.innerHTML = `
+        <div class="question-response-content">
+          <strong>🤖 AI Answer:</strong><br>
+          ${answer}
+        </div>
+      `;
+    }
+  }
+
+  showQuestionError(error) {
+    const responseElement = document.getElementById('question-response');
+    if (responseElement) {
+      responseElement.className = 'question-response error';
+      responseElement.innerHTML = `
+        <div class="question-response-content">
+          <strong>❌ Error:</strong><br>
+          ${error}
+        </div>
+      `;
+    }
+  }
+
+  clearQuestionInput() {
+    const questionInput = document.getElementById('question-input');
+    if (questionInput) {
+      questionInput.value = '';
+      questionInput.focus();
+    }
+    this.clearQuestionResponse();
+  }
+
+  clearQuestionResponse() {
+    const responseElement = document.getElementById('question-response');
+    if (responseElement) {
+      responseElement.className = 'question-response';
+      responseElement.innerHTML = '';
+    }
+  }
+
+  setQuestionInput(question) {
+    const questionInput = document.getElementById('question-input');
+    if (questionInput) {
+      questionInput.value = question;
+      questionInput.focus();
     }
   }
 }

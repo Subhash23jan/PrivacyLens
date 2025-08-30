@@ -1,4 +1,10 @@
 // Content Script - Simple Terms & Conditions Detector
+// 
+// POPUP MANAGEMENT: 
+// - Only ONE popup can exist at a time
+// - All popups are automatically closed when a new one is created
+// - Close buttons work correctly because they reference the current popup
+// - Analysis is prevented from running simultaneously to avoid conflicts
 
 console.log('Content Script: Starting...');
 
@@ -16,6 +22,8 @@ const CONFIG = {
 
 // Global variables
 let currentPopup = null;
+let isAnalyzing = false;
+let isInteractingWithPopup = false;
 
 // Check if we should run on this page
 function shouldRunOnPage() {
@@ -94,10 +102,8 @@ function setupLinkHover(link) {
       clearTimeout(hoverTimeout);
     }
     
-    // Hide any existing popup when hovering on a new link
-    if (currentPopup) {
-      hidePopup();
-    }
+    // ALWAYS hide any existing popup when hovering on a new link
+    hidePopup();
     
     // Set timeout for popup
     hoverTimeout = setTimeout(() => {
@@ -132,6 +138,9 @@ function setupLinkHover(link) {
 // Show hover popup
 function showHoverPopup(link) {
   console.log('Content Script: Showing hover popup for', link.href);
+  
+  // ALWAYS hide any existing popup first to ensure only one popup exists
+  hidePopup();
   
   // Validate URL first
   if (!isValidUrl(link.href)) {
@@ -174,13 +183,28 @@ function showHoverPopup(link) {
   const viewBtn = popup.querySelector('#hover-view-btn');
   
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => hidePopup());
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isInteractingWithPopup = true;
+      hidePopup();
+      setTimeout(() => { isInteractingWithPopup = false; }, 100);
+    });
   }
   if (closeBtn2) {
-    closeBtn2.addEventListener('click', () => hidePopup());
+    closeBtn2.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isInteractingWithPopup = true;
+      hidePopup();
+      setTimeout(() => { isInteractingWithPopup = false; }, 100);
+    });
   }
   if (viewBtn) {
-    viewBtn.addEventListener('click', () => window.open(link.href, '_blank'));
+    viewBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isInteractingWithPopup = true;
+      window.open(link.href, '_blank');
+      setTimeout(() => { isInteractingWithPopup = false; }, 100);
+    });
   }
   
   document.body.appendChild(popup);
@@ -227,13 +251,28 @@ function showHoverPopup(link) {
         const viewBtn = currentPopup.querySelector('#external-view-btn');
         
         if (closeBtn) {
-          closeBtn.addEventListener('click', () => hidePopup());
+          closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isInteractingWithPopup = true;
+            hidePopup();
+            setTimeout(() => { isInteractingWithPopup = false; }, 100);
+          });
         }
         if (closeBtn2) {
-          closeBtn2.addEventListener('click', () => hidePopup());
+          closeBtn2.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isInteractingWithPopup = true;
+            hidePopup();
+            setTimeout(() => { isInteractingWithPopup = false; }, 100);
+          });
         }
         if (viewBtn) {
-          viewBtn.addEventListener('click', () => window.open(link.href, '_blank'));
+          viewBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isInteractingWithPopup = true;
+            window.open(link.href, '_blank');
+            setTimeout(() => { isInteractingWithPopup = false; }, 100);
+          });
         }
       }
     }, 500);
@@ -249,6 +288,9 @@ function showHoverPopup(link) {
 // Show analysis popup
 function showAnalysisPopup(link) {
   console.log('Content Script: Showing analysis popup for', link.href);
+  
+  // ALWAYS hide any existing popup first to ensure only one popup exists
+  hidePopup();
   
   // Validate URL first
   if (!isValidUrl(link.href)) {
@@ -277,7 +319,12 @@ function showAnalysisPopup(link) {
   // Add event listener for analysis popup close button
   const closeBtn = popup.querySelector('#analysis-close-btn');
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => hidePopup());
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isInteractingWithPopup = true;
+      hidePopup();
+      setTimeout(() => { isInteractingWithPopup = false; }, 100);
+    });
   }
   
   document.body.appendChild(popup);
@@ -420,6 +467,14 @@ async function analyzeLink(link) {
   try {
     console.log('Content Script: Starting analysis for', link.href);
     
+    // Prevent multiple simultaneous analyses
+    if (isAnalyzing) {
+      console.log('Content Script: Analysis already in progress, skipping');
+      return;
+    }
+    
+    isAnalyzing = true;
+    
     // Set 5-second timeout
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => reject(new Error('Analysis timeout - taking too long')), 5000);
@@ -476,6 +531,9 @@ async function analyzeLink(link) {
     } else {
       showErrorPopup(link, 'Analysis failed: ' + error.message);
     }
+  } finally {
+    // Always reset the analyzing flag
+    isAnalyzing = false;
   }
 }
 
@@ -569,13 +627,28 @@ function updatePopupWithResults(link, analysis) {
   const viewBtn = currentPopup.querySelector('#view-btn');
   
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => hidePopup());
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isInteractingWithPopup = true;
+      hidePopup();
+      setTimeout(() => { isInteractingWithPopup = false; }, 100);
+    });
   }
   if (closeBtn2) {
-    closeBtn2.addEventListener('click', () => hidePopup());
+    closeBtn2.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isInteractingWithPopup = true;
+      hidePopup();
+      setTimeout(() => { isInteractingWithPopup = false; }, 100);
+    });
   }
   if (viewBtn) {
-    viewBtn.addEventListener('click', () => window.open(link.href, '_blank'));
+    viewBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isInteractingWithPopup = true;
+      window.open(link.href, '_blank');
+      setTimeout(() => { isInteractingWithPopup = false; }, 100);
+    });
   }
 }
 
@@ -609,10 +682,20 @@ function showErrorPopup(link, error) {
   const closeBtn2 = currentPopup.querySelector('#error-close-btn-2');
   
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => hidePopup());
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isInteractingWithPopup = true;
+      hidePopup();
+      setTimeout(() => { isInteractingWithPopup = false; }, 100);
+    });
   }
   if (closeBtn2) {
-    closeBtn2.addEventListener('click', () => hidePopup());
+    closeBtn2.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isInteractingWithPopup = true;
+      hidePopup();
+      setTimeout(() => { isInteractingWithPopup = false; }, 100);
+    });
   }
 }
 
@@ -655,24 +738,45 @@ function createPopup(link) {
 // Setup popup hover and click handlers
 function setupPopupHandlers(popup) {
   let isHoveringPopup = false;
+  let hideTimeout = null;
   
   // Mouse enter popup
   popup.addEventListener('mouseenter', () => {
     console.log('Content Script: Mouse enter popup');
     isHoveringPopup = true;
+    
+    // Clear any pending hide timeout
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
+      hideTimeout = null;
+    }
   });
   
   // Mouse leave popup
-  popup.addEventListener('mouseleave', () => {
+  popup.addEventListener('mouseleave', (e) => {
     console.log('Content Script: Mouse leave popup');
+    
+    // Check if we're moving to a button within the popup
+    const relatedTarget = e.relatedTarget;
+    if (relatedTarget && popup.contains(relatedTarget)) {
+      console.log('Content Script: Moving to popup button, not hiding');
+      return;
+    }
+    
     isHoveringPopup = false;
     
-    // Hide popup after a short delay if not hovering
-    setTimeout(() => {
-      if (!isHoveringPopup) {
+    // Don't hide if user is interacting with popup
+    if (isInteractingWithPopup) {
+      console.log('Content Script: User interacting with popup, not hiding');
+      return;
+    }
+    
+    // Hide popup after a longer delay to allow button clicks
+    hideTimeout = setTimeout(() => {
+      if (!isHoveringPopup && !isInteractingWithPopup) {
         hidePopup();
       }
-    }, 300);
+    }, 1000); // Increased delay to 1 second
   });
   
   // Click outside popup to close
@@ -695,22 +799,25 @@ function setupPopupHandlers(popup) {
 // Hide current popup
 function hidePopup() {
   if (currentPopup) {
+    console.log('Content Script: Hiding popup');
     currentPopup.remove();
     currentPopup = null;
   }
 }
 
-// Get risk level from score
+// Get risk level from score - Updated for normalized scoring
 function getRiskLevel(score) {
-  if (score >= 70) return 'HIGH';
-  if (score >= 30) return 'MEDIUM';
-  return 'LOW';
+  if (score >= 61) return 'HIGH';
+  if (score >= 41) return 'MEDIUM';
+  if (score >= 21) return 'LOW';
+  return 'VERY LOW';
 }
 
-// Get risk emoji from score
+// Get risk emoji from score - Updated for normalized scoring
 function getRiskEmoji(score) {
-  if (score >= 70) return '🚨';
-  if (score >= 30) return '⚠️';
+  if (score >= 61) return '🚨';
+  if (score >= 41) return '⚠️';
+  if (score >= 21) return 'ℹ️';
   return '✅';
 }
 

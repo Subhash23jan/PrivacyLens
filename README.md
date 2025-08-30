@@ -1,172 +1,236 @@
 # Terms & Conditions Red-Flag Summariser
 
-🔍 **AI-powered Chrome extension** that detects and analyzes privacy risks in terms & conditions documents.
+**Author: Subhash**
 
-## Features
+A powerful Chrome extension that uses AI to analyze terms and conditions, detect privacy risks, and answer specific questions about data handling practices.
 
-- 🤖 **AI-Powered Analysis**: Uses Google Gemini AI to analyze terms & conditions
-- 🔍 **Automatic Detection**: Detects terms links on any webpage
-- ⚡ **Quick Hover Analysis**: Hover over terms links for instant risk assessment
-- 🚨 **Risk Scoring**: Color-coded risk levels (High/Medium/Low)
-- 📊 **Detailed Reports**: Shows specific privacy concerns and data theft risks
-- 🎨 **Modern UI**: Clean, intuitive interface with emoji indicators
+## 🚀 Features
 
-## Installation
+### 🔍 **Automatic Detection**
+- Automatically detects terms & conditions, privacy policy, and legal agreement links
+- Works on any website with terms-related content
+- Real-time link detection and analysis
 
-### Prerequisites
+### 🤖 **AI-Powered Analysis**
+- **Risk Scoring**: 0-100 scale with realistic assessment
+- **Red Flag Detection**: Identifies privacy concerns and data risks
+- **Smart Filtering**: Focuses on relevant content to minimize AI tokens
+- **Normalized Scoring**: Most websites score 20-50, only serious violations get 70+
 
-Before installing the extension, you need to:
+### ❓ **Interactive Q&A**
+- **Ask Specific Questions**: Get answers about data handling, privacy, security
+- **Full Content Analysis**: Uses actual webpage content, not just summaries
+- **Smart Filtering**: Finds relevant paragraphs based on your question
+- **Natural Answers**: Human-like responses in 2-3 sentences
 
-1. **Get a Gemini API Key**:
-   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - Sign in and create a new API key
-   - Copy the key (starts with `AIza...`)
+### ⚡ **Quick Hover Analysis**
+- Hover over terms links for instant analysis
+- Real-time risk assessment
+- Non-intrusive popup interface
 
-2. **Configure Environment Variables**:
-   - See [ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md) for detailed instructions
-   - The extension uses Chrome storage to securely store your API key
+### 🎯 **Risk Categories**
+- **Very Low (0-20)**: Standard privacy practices
+- **Low (21-40)**: Minor concerns, common practices
+- **Medium (41-60)**: Some concerning practices
+- **High (61-80)**: Serious privacy issues
+- **Very High (81-100)**: Major red flags, avoid
 
-### Method 1: Load Unpacked Extension
+## 📋 Prerequisites
 
-1. **Download the extension files** to your computer
+- **Google Chrome** browser
+- **Gemini API Key** from [Google AI Studio](https://makersuite.google.com/app/apikey)
+
+## 🛠️ Installation & Setup
+
+### Step 1: Get API Key
+1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create a new API key
+3. Copy the key (starts with `AIza...`)
+
+### Step 2: Install Extension
+1. **Download/Clone** this repository
 2. **Open Chrome** and go to `chrome://extensions/`
-3. **Enable "Developer mode"** (toggle in top right)
+3. **Enable Developer Mode** (toggle in top right)
 4. **Click "Load unpacked"** and select the extension folder
-5. **Configure your API key** (see Environment Setup guide)
-6. **Pin the extension** to your toolbar for easy access
+5. **Pin the extension** to your toolbar for easy access
 
-### Method 2: Chrome Web Store (Coming Soon)
+### Step 3: Configure API Key
+1. **Click the extension icon** in your toolbar
+2. **Click the settings gear** (⚙️) in the bottom right
+3. **Enter your Gemini API key** in the input field
+4. **Click "Save Settings"**
+5. **Test the API key** to ensure it works
 
-The extension will be available on the Chrome Web Store soon.
+## 🎯 How to Use
 
-## How to Use
+### Basic Analysis
+1. **Navigate** to any website with terms & conditions
+2. **Click the extension icon** in your toolbar
+3. **Click "Analyze Current Page"**
+4. **View results** with risk score and red flags
+5. **Click "Ask Questions"** for specific inquiries
 
-### 1. **Automatic Detection**
-- The extension automatically detects terms & conditions links on any webpage
-- Look for the 🔍 icon next to detected links
+### Hover Analysis
+1. **Hover over** any terms/privacy policy link
+2. **Wait 300ms** for instant analysis popup
+3. **View risk assessment** and key concerns
+4. **Click "View Full Terms"** to open the page
 
-### 2. **Hover Analysis**
-- **Hover over any terms link** to see instant risk analysis
-- Get quick overview of privacy concerns without leaving the page
+### Ask Questions
+1. **After analysis**, click "Ask Questions"
+2. **Type your question** or click example questions:
+   - "How do they handle my image data?"
+   - "Can they sell my personal information?"
+   - "What happens if there's a data breach?"
+   - "Can I delete my data?"
+3. **Get AI-powered answers** based on actual terms content
 
-### 3. **Detailed Analysis**
-- **Click on terms links** for comprehensive analysis
-- View detailed risk breakdown with specific concerns
-
-### 4. **Popup Analysis**
-- **Click the extension icon** in your toolbar
-- Click "Analyze Current Page" to analyze the current webpage
-
-## Risk Levels
-
-- 🚨 **HIGH (70-100)**: Serious privacy/data theft risks
-- ⚠️ **MEDIUM (30-69)**: Concerning privacy practices  
-- ✅ **LOW (0-29)**: Standard or minor concerns
-
-## What It Detects
-
-### Privacy Concerns
-- Data collection practices
-- Data sharing with third parties
-- Data security measures
-- Privacy rights limitations
-- Surveillance and tracking
-- Data retention policies
-
-### Legal Red Flags
-- Mandatory arbitration clauses
-- Class action waivers
-- Automatic renewals
-- Hidden fees
-- Limited liability clauses
-- Intellectual property issues
-
-## Technical Details
+## 🔧 Technical Details
 
 ### Architecture
 - **Manifest V3**: Modern Chrome extension architecture
-- **Service Worker**: Background processing for AI analysis
-- **Content Scripts**: Page detection and popup display
-- **Modular Design**: Clean, maintainable code structure
+- **Service Worker**: Background processing and API calls
+- **Content Scripts**: Page interaction and link detection
+- **AI Integration**: Google Gemini API for intelligent analysis
 
-### AI Integration
-- **Google Gemini API**: Advanced AI analysis
-- **Content Filtering**: Focuses on relevant sections
-- **Risk Scoring**: Intelligent risk assessment
-- **Privacy Focus**: Specialized in privacy and data theft detection
+### Content Processing
+- **Smart Filtering**: Extracts relevant content based on question keywords
+- **Paragraph Scoring**: Ranks content by relevance to user questions
+- **Token Optimization**: Minimizes AI usage while maximizing accuracy
+- **Real-time Analysis**: Processes content as you browse
 
-### Files Structure
+### AI Features
+- **Risk Assessment**: Analyzes privacy and data protection practices
+- **Red Flag Detection**: Identifies concerning terms and conditions
+- **Question Answering**: Provides specific answers from actual content
+- **Natural Language**: Human-like responses and explanations
+
+## 📁 File Structure
+
 ```
+terms_condition_reader/
 ├── manifest.json          # Extension configuration
-├── config.js              # Configuration and constants
-├── background.js          # Service worker (AI processing)
-├── ai-service.js          # AI service module
-├── content-analyzer.js    # Content analysis module
-├── content.js             # Content script (link detection)
-├── content.css            # Content script styles
-├── popup.html             # Extension popup UI
-├── popup.css              # Popup styles
-├── popup.js               # Popup functionality
-└── README.md              # This file
+├── popup.html            # Main extension interface
+├── popup.js              # Popup functionality
+├── popup.css             # Popup styling
+├── content.js            # Page interaction and hover
+├── content.css           # Hover popup styling
+├── background.js         # Background processing
+├── ai-service.js         # AI integration
+├── content-analyzer.js   # Content processing
+├── config.js             # Configuration and constants
+├── test.html             # Testing page
+└── README.md             # This file
 ```
 
-## Privacy & Security
+## 🎨 UI Features
 
-- 🔒 **No Data Collection**: The extension doesn't collect or store your data
-- 🛡️ **Local Processing**: Analysis happens locally in your browser
-- 🔐 **Secure API**: Uses Google's secure Gemini API
-- 📝 **Transparent**: Open source code for transparency
+### Modern Design
+- **Clean Interface**: Blue and white theme
+- **Responsive Layout**: Works on different screen sizes
+- **Smooth Animations**: Professional user experience
+- **Intuitive Navigation**: Easy-to-use interface
 
-## Troubleshooting
+### Interactive Elements
+- **Hover Effects**: Visual feedback on interactions
+- **Loading States**: Clear indication of processing
+- **Error Handling**: User-friendly error messages
+- **Success Feedback**: Confirmation of actions
+
+## 🔍 Supported Content Types
+
+### Terms & Conditions Keywords
+- Terms of service, terms and conditions, terms of use
+- User agreement, privacy policy, service agreement
+- Legal notice, conditions of use, disclaimer
+- Policy, agreement, legal
+
+### Question Categories
+- **Data Handling**: Collection, storage, processing
+- **Privacy Rights**: Access, deletion, portability
+- **Security**: Breaches, protection, encryption
+- **Sharing**: Third parties, partners, selling
+- **Consent**: Opt-in, opt-out, permissions
+- **Liability**: Responsibility, damages, claims
+
+## 🚨 Privacy & Security
+
+### Data Protection
+- **No Data Storage**: Extension doesn't store personal information
+- **Local Processing**: Analysis happens in your browser
+- **Secure API**: Uses Google's secure Gemini API
+- **No Tracking**: Extension doesn't track your browsing
+
+### API Security
+- **API Key Protection**: Stored securely in Chrome storage
+- **HTTPS Only**: All API calls use secure connections
+- **No Data Logging**: Extension doesn't log your questions or analysis
+
+## 🐛 Troubleshooting
 
 ### Common Issues
 
-**"Analysis Failed" Error**
-- Refresh the page and try again
-- Check your internet connection
-- Make sure the page is fully loaded
+#### Extension Not Working
+- **Check API Key**: Ensure your Gemini API key is valid
+- **Refresh Page**: Reload the page you're analyzing
+- **Restart Browser**: Close and reopen Chrome
+- **Reinstall Extension**: Remove and re-add the extension
 
-**No Terms Links Detected**
-- The page might not have terms links
-- Try a different website
-- Check if the page is fully loaded
+#### Analysis Fails
+- **Check Internet**: Ensure you have a stable connection
+- **API Limits**: Check if you've exceeded API usage limits
+- **Page Content**: Make sure the page has readable content
+- **CORS Issues**: Some sites may block content access
 
-**Extension Not Working**
-- Reload the extension in `chrome://extensions/`
-- Check browser console for errors
-- Make sure you're not on a restricted page
+#### Questions Not Working
+- **Analyze First**: Make sure you've analyzed the page before asking questions
+- **Clear Question**: Ensure your question is clear and specific
+- **Check Content**: Verify the page has relevant terms content
 
-### Debug Mode
-1. Open browser console (F12)
-2. Look for "Terms & Conditions Red-Flag Summariser" logs
-3. Check for any error messages
+### Error Messages
+- **"API key not configured"**: Set up your Gemini API key in settings
+- **"Analysis failed"**: Check internet connection and try again
+- **"No content found"**: The page may not have readable terms content
+- **"CORS error"**: External sites may block content access
 
-## Development
+## 🔄 Updates & Maintenance
 
-### Setup Development Environment
-1. Clone the repository
-2. Load as unpacked extension in Chrome
-3. Make changes to files
-4. Reload extension to test changes
+### Version History
+- **v1.0.0**: Initial release with basic analysis
+- **v1.1.0**: Added interactive Q&A feature
+- **v1.2.0**: Enhanced content filtering and natural answers
 
-### Key Files to Modify
-- `config.js`: Configuration and keywords
-- `ai-service.js`: AI analysis logic
-- `content.js`: Link detection logic
-- `popup.html/css/js`: User interface
+### Future Features
+- **Batch Analysis**: Analyze multiple pages at once
+- **Export Reports**: Save analysis results as PDF
+- **Custom Keywords**: Add your own terms to detect
+- **History**: Track analyzed pages and questions
 
-## Support
+## 📞 Support
 
-If you encounter any issues:
-1. Check the troubleshooting section above
-2. Look at browser console for error messages
-3. Try reloading the extension
-4. Contact support with specific error details
+### Getting Help
+- **Check Troubleshooting**: Review the troubleshooting section above
+- **Test API Key**: Ensure your Gemini API key is working
+- **Clear Cache**: Clear browser cache and cookies
+- **Update Extension**: Ensure you have the latest version
 
-## License
+### Reporting Issues
+- **Browser Console**: Check for error messages in Developer Tools
+- **Extension Logs**: Look for console logs from the extension
+- **Reproduce Steps**: Document how to reproduce the issue
 
-This project is open source and available under the MIT License.
+## 📄 License
+
+This project is created by **Subhash** for educational and privacy protection purposes.
+
+## 🙏 Acknowledgments
+
+- **Google Gemini API** for AI capabilities
+- **Chrome Extension API** for browser integration
+- **Privacy advocates** for inspiration and feedback
 
 ---
 
-**Made with ❤️ for better privacy protection**
+**Made with ❤️ by Subhash**
+
+*Protecting your privacy, one terms & conditions at a time.*
