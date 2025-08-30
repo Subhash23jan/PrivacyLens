@@ -178,7 +178,7 @@ Here's a complete example of all environment variables:
 
 ```javascript
 {
-  GEMINI_API_KEY: 'AIzaSyCkaN0eD-j4s5aU9aqU1iPIPW3A9YxF6Y4',
+  GEMINI_API_KEY: 'YOUR_GEMINI_API_KEY',
   GEMINI_MODEL: 'gemini-1.5-flash',
   GEMINI_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
   MAX_CONTENT_LENGTH: 3000,
